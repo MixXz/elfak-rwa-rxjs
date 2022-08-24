@@ -1,1 +1,5 @@
-document.write("Init");
+import { drawDashboard } from "./view/drawFunctions";
+
+
+
+drawDashboard(document.body);
