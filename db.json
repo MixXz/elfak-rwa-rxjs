@@ -1,0 +1,84 @@
+{
+  "matches": [
+    {
+      "id": 1,
+      "homeTeam": "Union Berlin",
+      "guestTeam": "RB Leipzig",
+      "homeTeamOdd": 3.25,
+      "guestTeamOdd": 2.2,
+      "tiedOdd": 3.43
+    },
+    {
+      "id": 2,
+      "homeTeam": "Vojvodina",
+      "guestTeam": "Mladost",
+      "homeTeamOdd": 1.25,
+      "guestTeamOdd": 2.21,
+      "tiedOdd": 3.34
+    },
+    {
+      "id": 3,
+      "homeTeam": "Napredak",
+      "guestTeam": "Sevilla",
+      "homeTeamOdd": 2.22,
+      "guestTeamOdd": 1.75,
+      "tiedOdd": 4.22
+    },
+    {
+      "id": 4,
+      "homeTeam": "Juventus",
+      "guestTeam": "Atletico Madrid",
+      "homeTeamOdd": 1.99,
+      "guestTeamOdd": 1.75,
+      "tiedOdd": 2.22
+    },
+    {
+      "id": 5,
+      "homeTeam": "Atalanta",
+      "guestTeam": "AS Roma",
+      "homeTeamOdd": 1.51,
+      "guestTeamOdd": 3.33,
+      "tiedOdd": 3.72
+    },
+    {
+      "id": 6,
+      "homeTeam": "AC Milan",
+      "guestTeam": "Partizan",
+      "homeTeamOdd": 1.25,
+      "guestTeamOdd": 6.02,
+      "tiedOdd": 5.2
+    },
+    {
+      "id": 7,
+      "homeTeam": "Radnički Niš",
+      "guestTeam": "Real Madrid",
+      "homeTeamOdd": 1.25,
+      "guestTeamOdd": 4.41,
+      "tiedOdd": 3.22
+    },
+    {
+      "id": 8,
+      "homeTeam": "Javor",
+      "guestTeam": "Spartak Subotica",
+      "homeTeamOdd": 2.25,
+      "guestTeamOdd": 1.11,
+      "tiedOdd": 6.81
+    },
+    {
+      "id": 9,
+      "homeTeam": "Atalanta",
+      "guestTeam": "AS Roma",
+      "homeTeamOdd": 1.54,
+      "guestTeamOdd": 3.33,
+      "tiedOdd": 3.72
+    },
+    {
+      "id": 10,
+      "homeTeam": "Bayern",
+      "guestTeam": "Crvena Zvezda",
+      "homeTeamOdd": 9.51,
+      "guestTeamOdd": 1.01,
+      "tiedOdd": 10.11
+    }
+  ]
+}

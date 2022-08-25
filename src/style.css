@@ -1,96 +1,138 @@
 .main-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 .title-div {
-    font-weight: 600;
-    font-size: 40px;
+  font-weight: 600;
+  font-size: 40px;
 }
 .cont-div {
-    display: flex;
-    justify-content: center;
-    background-color: red;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: rgb(53, 174, 81);
+  width: 100%;
 }
 .table-div {
-    width: 80%;
-    height: 90%;
-    background-color: white;
-    margin: 10px;
+  width: 80%;
+  height: 90%;
+  background-color: aquamarine;
+  margin: 10px;
 }
 .ticket-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30%;
-    min-height: 90vh;
-    max-height: 90vh;
-    background-color: white;
-    margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30%;
+  min-height: 90vh;
+  max-height: 90vh;
+  background-color: white;
+  margin: 10px;
 }
-.ticket-label { 
-    font-weight: 600;
-    font-size: 25px;
+.ticket-label {
+  font-weight: 600;
+  font-size: 25px;
 }
-.balance-label { 
-    font-size: 20px;
+.balance-label {
+  font-size: 20px;
 }
 .top-div {
-    display: flex;
-    flex-direction: column;
-    margin: 5px 0px 0px 5px;
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0px 0px 5px;
 }
 .odd-label {
-    font-size: 20px; 
+  font-size: 20px;
 }
 .bottom-div {
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(200, 150, 248);
-    margin: 0px 5px 10px 5px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(200, 150, 248);
+  margin: 0px 5px 10px 5px;
 }
 .middle-div {
-    background-color: aquamarine;
-    height: 100%;
-    margin: 5px;
+  background-color: aquamarine;
+  height: 100%;
+  margin: 5px;
 }
 .row-div {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .submit-btn {
-    margin: 10px;
+  margin: 10px;
 }
 .chosen-match-div {
-    display: flex;
-    justify-content: space-between;
-    height: 40px;
-    margin: 5px;
-    background-color: rgba(0, 0, 0, 0.307);
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  margin: 5px;
+  background-color: rgba(0, 0, 0, 0.307);
 }
 .chosen-match-left-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 5px;
 }
 .chosen-match-right-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-right: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-right: 5px;
 }
 .chosen-match-winner-lbl {
-    font-weight: 600;
+  font-weight: 600;
 }
 .match-div {
-    height: 60px;
-    margin: 10px;
-    background-color: rgba(0, 0, 0, 0.307);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  margin: 10px;
+  background-color: rgba(0, 0, 0, 0.307);
+}
+.home-team-div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.307);
+  height: 70%;
+  width: 100%;
+  margin: 5px;
+  font-size: larger;
+}
+.guest-team-div {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.307);
+  height: 70%;
+  width: 100%;
+  margin: 5px;
+  font-size: larger;
+}
+.info-bar-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: rgba(0, 0, 0, 0.307);
+  height: 100%;
+  width: 50%;
+}
+.result-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+  font-size: larger;
+}
+
+.odds-div {
+  display: flex;
+  justify-content: space-evenly;
 }

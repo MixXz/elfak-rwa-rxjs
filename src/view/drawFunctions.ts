@@ -1,3 +1,9 @@
+import { getMatches } from "../controllers/controller";
+import { Match } from "../interfaces/Match";
+import { addMatch } from "../logic/ticketLogic";
+
+let middleDiv: HTMLElement;
+
 export function drawDashboard(host: HTMLElement) {
   const mainCont: HTMLElement = document.createElement("div");
   mainCont.className = "main-div";
@@ -15,23 +21,80 @@ export function drawDashboard(host: HTMLElement) {
   drawMatchTable(cont);
   drawTicket(cont);
 }
-
 function drawMatchTable(host: HTMLElement) {
   const tableDiv: HTMLElement = document.createElement("div");
   tableDiv.className = "table-div";
   host.appendChild(tableDiv);
 
-  drawMatch(tableDiv);
-  drawMatch(tableDiv);
-  drawMatch(tableDiv);
-  drawMatch(tableDiv);
-  drawMatch(tableDiv);
-  drawMatch(tableDiv);
+  getMatches().subscribe((matches) =>
+    matches.forEach((match) => {
+      drawMatch(tableDiv, match);
+    })
+  );
 }
-function drawMatch(host: HTMLElement) {
+function drawMatch(host: HTMLElement, match: Match) {
   const matchDiv: HTMLElement = document.createElement("div");
   matchDiv.className = "match-div";
+  matchDiv.id = `match${match.id}`;
   host.appendChild(matchDiv);
+
+  const homeTeamDiv: HTMLElement = document.createElement("div");
+  homeTeamDiv.className = "home-team-div";
+  homeTeamDiv.innerHTML = match.homeTeam;
+  matchDiv.appendChild(homeTeamDiv);
+
+  const infoDiv: HTMLElement = document.createElement("div");
+  infoDiv.className = "info-bar-div";
+  matchDiv.appendChild(infoDiv);
+
+  const guestTeamDiv: HTMLElement = document.createElement("div");
+  guestTeamDiv.className = "guest-team-div";
+  guestTeamDiv.innerHTML = match.guestTeam;
+  matchDiv.appendChild(guestTeamDiv);
+
+  drawInfoBar(infoDiv, match);
+}
+function drawInfoBar(host: HTMLElement, match: Match) {
+  const resultDiv: HTMLElement = document.createElement("div");
+  resultDiv.className = "result-div";
+  host.appendChild(resultDiv);
+
+  const resLabel: HTMLElement = document.createElement("label");
+  resLabel.innerHTML = "-.-";
+  resultDiv.appendChild(resLabel);
+
+  const minutesLabel: HTMLElement = document.createElement("label");
+  minutesLabel.innerHTML = "-.-";
+  resultDiv.appendChild(minutesLabel);
+
+  const oddsDiv: HTMLElement = document.createElement("div");
+  oddsDiv.className = "odds-div";
+  host.appendChild(oddsDiv);
+
+  const homeWinBtn: HTMLElement = document.createElement("button");
+  homeWinBtn.innerHTML = `1: ${match.homeTeamOdd}`;
+  homeWinBtn.id = match.id;
+  homeWinBtn.onclick = () => {
+    addMatch(middleDiv, match, "1");
+    removeMatch(match.id);
+  };
+  oddsDiv.appendChild(homeWinBtn);
+
+  const tiedBtn: HTMLElement = document.createElement("button");
+  tiedBtn.innerHTML = `X: ${match.tiedOdd}`;
+  tiedBtn.onclick = () => {
+    addMatch(middleDiv, match, "X");
+    removeMatch(match.id);
+  };
+  oddsDiv.appendChild(tiedBtn);
+
+  const guestWinBtn: HTMLElement = document.createElement("button");
+  guestWinBtn.innerHTML = `2: ${match.guestTeamOdd}`;
+  guestWinBtn.onclick = () => {
+    addMatch(middleDiv, match, "2");
+    removeMatch(match.id);
+  };
+  oddsDiv.appendChild(guestWinBtn);
 }
 function drawTicket(host: HTMLElement) {
   const ticketDiv: HTMLElement = document.createElement("div");
@@ -42,7 +105,7 @@ function drawTicket(host: HTMLElement) {
   topDiv.className = "top-div";
   ticketDiv.appendChild(topDiv);
 
-  const middleDiv: HTMLElement = document.createElement("div");
+  middleDiv = document.createElement("div");
   middleDiv.className = "middle-div";
   ticketDiv.appendChild(middleDiv);
 
@@ -61,7 +124,7 @@ function drawTicket(host: HTMLElement) {
   topDiv.appendChild(balanceLabel);
 
   const oddLabel: HTMLElement = document.createElement("label");
-  oddLabel.innerHTML = "Odd: 10.5";
+  oddLabel.innerHTML = "Odd: 0";
   oddLabel.className = "odd-label";
   bottomDiv.appendChild(oddLabel);
 
@@ -86,16 +149,13 @@ function drawTicket(host: HTMLElement) {
   submitBtn.innerHTML = "Submit";
   submitBtn.className = "submit-btn";
   bottomDiv.appendChild(submitBtn);
-
-  drawChosenMatch(middleDiv);
-  drawChosenMatch(middleDiv);
-  drawChosenMatch(middleDiv);
-  drawChosenMatch(middleDiv);
-  drawChosenMatch(middleDiv);
-  drawChosenMatch(middleDiv);
 }
 
-function drawChosenMatch(host: HTMLElement) {
+export function drawChosenMatch(
+  host: HTMLElement,
+  match: Match,
+  outcome: string
+) {
   const chosenMatchDiv: HTMLElement = document.createElement("div");
   chosenMatchDiv.className = "chosen-match-div";
   host.appendChild(chosenMatchDiv);
@@ -109,19 +169,28 @@ function drawChosenMatch(host: HTMLElement) {
   chosenMatchDiv.appendChild(rightDiv);
 
   const team1Label: HTMLElement = document.createElement("label");
-  team1Label.innerHTML = "Bayern";
+  team1Label.innerHTML = match.homeTeam;
   leftDiv.appendChild(team1Label);
 
   const team2Label: HTMLElement = document.createElement("label");
-  team2Label.innerHTML = "Crvena Zvezda";
+  team2Label.innerHTML = match.guestTeam;
   leftDiv.appendChild(team2Label);
 
   const winnerLabel: HTMLElement = document.createElement("label");
-  winnerLabel.innerHTML = "1";
+  winnerLabel.innerHTML = outcome;
   winnerLabel.className = "chosen-match-winner-lbl";
   rightDiv.appendChild(winnerLabel);
 
   const oddLabel: HTMLElement = document.createElement("label");
-  oddLabel.innerHTML = "3.51";
+  oddLabel.innerHTML =
+    outcome === "1"
+      ? match.homeTeamOdd + ""
+      : outcome === "2"
+      ? match.guestTeamOdd + ""
+      : match.tiedOdd + "";
   rightDiv.appendChild(oddLabel);
+}
+function removeMatch(matchID: string) {
+  const matchDiv = document.getElementById(`match${matchID}`);
+  matchDiv.remove();
 }
