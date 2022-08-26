@@ -47,6 +47,9 @@
 .odd-label {
   font-size: 20px;
 }
+.win-label {
+  font-size: 20px;
+}
 .bottom-div {
   display: flex;
   flex-direction: column;

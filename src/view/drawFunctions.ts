@@ -1,6 +1,5 @@
-import { getMatches } from "../controllers/controller";
 import { Match } from "../interfaces/Match";
-import { addMatch } from "../logic/ticketLogic";
+import { addMatch, startSimulation } from "../logic/ticketLogic";
 
 let middleDiv: HTMLElement;
 
@@ -18,21 +17,16 @@ export function drawDashboard(host: HTMLElement) {
   cont.className = "cont-div";
   mainCont.appendChild(cont);
 
-  drawMatchTable(cont);
-  drawTicket(cont);
-}
-function drawMatchTable(host: HTMLElement) {
   const tableDiv: HTMLElement = document.createElement("div");
   tableDiv.className = "table-div";
-  host.appendChild(tableDiv);
+  cont.appendChild(tableDiv);
 
-  getMatches().subscribe((matches) =>
-    matches.forEach((match) => {
-      drawMatch(tableDiv, match);
-    })
-  );
+  drawTicket(cont);
 }
-function drawMatch(host: HTMLElement, match: Match) {
+
+export function drawMatch(match: Match) {
+  const host: HTMLElement = document.querySelector(".table-div");
+
   const matchDiv: HTMLElement = document.createElement("div");
   matchDiv.className = "match-div";
   matchDiv.id = `match${match.id}`;
@@ -54,6 +48,7 @@ function drawMatch(host: HTMLElement, match: Match) {
 
   drawInfoBar(infoDiv, match);
 }
+
 function drawInfoBar(host: HTMLElement, match: Match) {
   const resultDiv: HTMLElement = document.createElement("div");
   resultDiv.className = "result-div";
@@ -61,10 +56,13 @@ function drawInfoBar(host: HTMLElement, match: Match) {
 
   const resLabel: HTMLElement = document.createElement("label");
   resLabel.innerHTML = "-.-";
+  resLabel.id = `match${match.id}-goals`;
   resultDiv.appendChild(resLabel);
 
   const minutesLabel: HTMLElement = document.createElement("label");
   minutesLabel.innerHTML = "-.-";
+  minutesLabel.className = "minutes-label";
+  minutesLabel.id = `match${match.id}-minutes`;
   resultDiv.appendChild(minutesLabel);
 
   const oddsDiv: HTMLElement = document.createElement("div");
@@ -73,10 +71,9 @@ function drawInfoBar(host: HTMLElement, match: Match) {
 
   const homeWinBtn: HTMLElement = document.createElement("button");
   homeWinBtn.innerHTML = `1: ${match.homeTeamOdd}`;
-  homeWinBtn.id = match.id;
   homeWinBtn.onclick = () => {
     addMatch(middleDiv, match, "1");
-    removeMatch(match.id);
+    disableButtons(oddsDiv);
   };
   oddsDiv.appendChild(homeWinBtn);
 
@@ -84,7 +81,7 @@ function drawInfoBar(host: HTMLElement, match: Match) {
   tiedBtn.innerHTML = `X: ${match.tiedOdd}`;
   tiedBtn.onclick = () => {
     addMatch(middleDiv, match, "X");
-    removeMatch(match.id);
+    disableButtons(oddsDiv);
   };
   oddsDiv.appendChild(tiedBtn);
 
@@ -92,10 +89,11 @@ function drawInfoBar(host: HTMLElement, match: Match) {
   guestWinBtn.innerHTML = `2: ${match.guestTeamOdd}`;
   guestWinBtn.onclick = () => {
     addMatch(middleDiv, match, "2");
-    removeMatch(match.id);
+    disableButtons(oddsDiv);
   };
   oddsDiv.appendChild(guestWinBtn);
 }
+
 function drawTicket(host: HTMLElement) {
   const ticketDiv: HTMLElement = document.createElement("div");
   ticketDiv.className = "ticket-div";
@@ -129,8 +127,8 @@ function drawTicket(host: HTMLElement) {
   bottomDiv.appendChild(oddLabel);
 
   const winLabel: HTMLElement = document.createElement("label");
-  winLabel.innerHTML = "Win: 1050 RSD";
-  winLabel.className = "odd-label";
+  winLabel.innerHTML = "Win: 0 €";
+  winLabel.className = "win-label";
   bottomDiv.appendChild(winLabel);
 
   const rowDiv: HTMLElement = document.createElement("div");
@@ -143,11 +141,16 @@ function drawTicket(host: HTMLElement) {
   rowDiv.appendChild(stakeLabel);
 
   const stakeInput: HTMLElement = document.createElement("input");
+  stakeInput.setAttribute("type", "number");
+  stakeInput.setAttribute("min", "0");
+  stakeInput.setAttribute("step", "10");
+  stakeInput.className = "stake-input";
   rowDiv.appendChild(stakeInput);
 
   const submitBtn: HTMLElement = document.createElement("button");
   submitBtn.innerHTML = "Submit";
   submitBtn.className = "submit-btn";
+  submitBtn.onclick = () => startSimulation();
   bottomDiv.appendChild(submitBtn);
 }
 
@@ -158,6 +161,7 @@ export function drawChosenMatch(
 ) {
   const chosenMatchDiv: HTMLElement = document.createElement("div");
   chosenMatchDiv.className = "chosen-match-div";
+  chosenMatchDiv.id = `pair${match.id}`;
   host.appendChild(chosenMatchDiv);
 
   const leftDiv: HTMLElement = document.createElement("div");
@@ -190,7 +194,8 @@ export function drawChosenMatch(
       : match.tiedOdd + "";
   rightDiv.appendChild(oddLabel);
 }
-function removeMatch(matchID: string) {
-  const matchDiv = document.getElementById(`match${matchID}`);
-  matchDiv.remove();
+
+function disableButtons(div: HTMLElement) {
+  const buttons = div.querySelectorAll("button");
+  buttons.forEach((btn) => (btn.disabled = true));
 }
