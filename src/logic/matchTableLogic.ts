@@ -1,29 +1,58 @@
-import { finalize, from, interval, take } from "rxjs";
-import { getMatches } from "../controllers/controller";
-import { Match } from "../interfaces/Match";
-import { drawMatch } from "../view/drawFunctions";
+import {
+  debounceTime,
+  filter,
+  finalize,
+  fromEvent,
+  interval,
+  map,
+  switchMap,
+  take,
+} from "rxjs";
+import { Match } from "../models/Match";
+import { getMatches, getMatchesByQuery } from "../controllers/data";
+import { clearMatchTable, drawMatch } from "../view/drawFunctions";
+import { checkIfAdded, checkPair } from "./ticketLogic";
 
-export function loadMatches() {
+export const loadMatches = (): void => {
   getMatches().subscribe((matches) =>
     matches.forEach((match) => {
       drawMatch(match);
+      checkIfAdded(match);
     })
   );
-}
-export function simulateMinutes(match: Match) {
+};
+
+export const search = (): void => {
+  const searchInput: HTMLInputElement = document.querySelector(".search-input");
+  fromEvent(searchInput, "input")
+    .pipe(
+      debounceTime(200),
+      map((ev: InputEvent) => (<HTMLInputElement>ev.target).value),
+      filter((query: string) => {
+        if (query.length > 1) return true;
+
+        clearMatchTable();
+        loadMatches();
+      }),
+      switchMap((query) => getMatchesByQuery(query))
+    )
+    .subscribe((matches) => handleSearchResults(matches));
+};
+
+export const simulateMatch = (match: Match): void => {
   const randomMinutes: number = Math.floor(Math.random() * 10 + 1) + 90;
 
   let homeGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 4),
+    Math.floor(Math.random() * 7),
     randomMinutes
   );
   let guestGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 4),
+    Math.floor(Math.random() * 7),
     randomMinutes
   );
 
-  let homeGoals = 0;
-  let guestGoals = 0;
+  let homeGoals: number = 0;
+  let guestGoals: number = 0;
 
   const goalsLabel: HTMLElement = document.getElementById(
     `match${match.id}-goals`
@@ -44,13 +73,7 @@ export function simulateMinutes(match: Match) {
   interval(50)
     .pipe(
       take(randomMinutes),
-      finalize(() => {
-        const ticketPairDiv: HTMLElement = document.getElementById(
-          `pair${match.id}`
-        );
-        ticketPairDiv.style.backgroundColor =
-          match.result === match.outcome ? "green" : "red";
-      })
+      finalize(() => checkPair(match))
     )
     .subscribe((minute: number) => {
       minutesLabel.innerHTML = `${minute}'`;
@@ -70,10 +93,11 @@ export function simulateMinutes(match: Match) {
         guestGoalsMin.shift();
       }
     });
-}
+};
 
-function getGoalMinutes(numOfGoals: number, maxRange: number): number[] {
+const getGoalMinutes = (numOfGoals: number, maxRange: number): number[] => {
   let goalMinutes: number[] = [];
+
   if (numOfGoals !== 0) {
     for (let i = 0; i < numOfGoals; i++) {
       goalMinutes.push(Math.floor(Math.random() * maxRange));
@@ -81,4 +105,12 @@ function getGoalMinutes(numOfGoals: number, maxRange: number): number[] {
   }
   goalMinutes.sort((a, b) => a - b);
   return goalMinutes;
-}
+};
+const handleSearchResults = (matches: Match[]): void => {
+  clearMatchTable();
+  
+  matches.forEach((match) => {
+    drawMatch(match);
+    checkIfAdded(match);
+  });
+};

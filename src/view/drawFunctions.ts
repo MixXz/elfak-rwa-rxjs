@@ -1,15 +1,13 @@
-import { Match } from "../interfaces/Match";
-import { addMatch, startSimulation } from "../logic/ticketLogic";
+import { Match } from "../models/Match";
+import { addMatch, resetTicket, startSimulation } from "../logic/ticketLogic";
 
-let middleDiv: HTMLElement;
-
-export function drawDashboard(host: HTMLElement) {
+export const drawDashboard = (host: HTMLElement): void => {
   const mainCont: HTMLElement = document.createElement("div");
   mainCont.className = "main-div";
   host.appendChild(mainCont);
 
   const titleDiv: HTMLElement = document.createElement("div");
-  titleDiv.innerHTML = "Football Betting";
+  titleDiv.innerHTML = "Football Betting Simulator";
   titleDiv.className = "title-div";
   mainCont.appendChild(titleDiv);
 
@@ -21,41 +19,91 @@ export function drawDashboard(host: HTMLElement) {
   tableDiv.className = "table-div";
   cont.appendChild(tableDiv);
 
+  const searchInput: HTMLInputElement = document.createElement("input");
+  searchInput.className = "search-input";
+  searchInput.setAttribute("placeholder", "Search match");
+  tableDiv.appendChild(searchInput);
+
   drawTicket(cont);
-}
+};
 
-export function drawMatch(match: Match) {
-  const host: HTMLElement = document.querySelector(".table-div");
+const drawTicket = (host: HTMLElement): void => {
+  const ticketDiv: HTMLElement = document.createElement("div");
+  ticketDiv.className = "ticket-div";
+  host.appendChild(ticketDiv);
 
-  const matchDiv: HTMLElement = document.createElement("div");
-  matchDiv.className = "match-div";
-  matchDiv.id = `match${match.id}`;
-  host.appendChild(matchDiv);
+  const topDiv: HTMLElement = document.createElement("div");
+  topDiv.className = "top-div";
+  ticketDiv.appendChild(topDiv);
 
-  const homeTeamDiv: HTMLElement = document.createElement("div");
-  homeTeamDiv.className = "home-team-div";
-  homeTeamDiv.innerHTML = match.homeTeam;
-  matchDiv.appendChild(homeTeamDiv);
+  const middleDiv = document.createElement("div");
+  middleDiv.className = "middle-div";
+  ticketDiv.appendChild(middleDiv);
 
-  const infoDiv: HTMLElement = document.createElement("div");
-  infoDiv.className = "info-bar-div";
-  matchDiv.appendChild(infoDiv);
+  const bottomDiv: HTMLElement = document.createElement("div");
+  bottomDiv.className = "bottom-div";
+  ticketDiv.appendChild(bottomDiv);
 
-  const guestTeamDiv: HTMLElement = document.createElement("div");
-  guestTeamDiv.className = "guest-team-div";
-  guestTeamDiv.innerHTML = match.guestTeam;
-  matchDiv.appendChild(guestTeamDiv);
+  const closeLabel: HTMLElement = document.createElement("label");
+  closeLabel.innerHTML = "✖";
+  closeLabel.className = "close-label";
+  closeLabel.onclick = () => resetTicketView(-1);
+  topDiv.appendChild(closeLabel);
 
-  drawInfoBar(infoDiv, match);
-}
+  const ticketLabel: HTMLElement = document.createElement("label");
+  ticketLabel.innerHTML = "Ticket";
+  ticketLabel.className = "ticket-label";
+  topDiv.appendChild(ticketLabel);
 
-function drawInfoBar(host: HTMLElement, match: Match) {
+  const balanceLabel: HTMLElement = document.createElement("label");
+  balanceLabel.innerHTML = "Balance: 1000 €";
+  balanceLabel.className = "balance-label";
+  topDiv.appendChild(balanceLabel);
+
+  const oddLabel: HTMLElement = document.createElement("label");
+  oddLabel.innerHTML = "Odd: 0";
+  oddLabel.className = "odd-label";
+  bottomDiv.appendChild(oddLabel);
+
+  const winLabel: HTMLElement = document.createElement("label");
+  winLabel.innerHTML = "Win: 0 €";
+  winLabel.className = "win-label";
+  bottomDiv.appendChild(winLabel);
+
+  const rowDiv: HTMLElement = document.createElement("div");
+  rowDiv.className = "row-div";
+  bottomDiv.appendChild(rowDiv);
+
+  const stakeLabel: HTMLElement = document.createElement("label");
+  stakeLabel.innerHTML = "Stake: ";
+  stakeLabel.className = "odd-label";
+  rowDiv.appendChild(stakeLabel);
+
+  const stakeInput: HTMLElement = document.createElement("input");
+  stakeInput.setAttribute("type", "number");
+  stakeInput.setAttribute("min", "0");
+  stakeInput.setAttribute("step", "10");
+  stakeInput.setAttribute("value", "0");
+  stakeInput.className = "stake-input";
+  rowDiv.appendChild(stakeInput);
+
+  const submitBtn: HTMLElement = document.createElement("button");
+  submitBtn.innerHTML = "Submit";
+  submitBtn.className = "submit-btn";
+  submitBtn.onclick = () => startSimulation();
+  bottomDiv.appendChild(submitBtn);
+};
+
+const drawInfoBar = (host: HTMLElement, match: Match): void => {
+  const middleDiv: HTMLElement = document.querySelector(".middle-div");
+
   const resultDiv: HTMLElement = document.createElement("div");
   resultDiv.className = "result-div";
   host.appendChild(resultDiv);
 
   const resLabel: HTMLElement = document.createElement("label");
   resLabel.innerHTML = "-.-";
+  resLabel.className = "result-label";
   resLabel.id = `match${match.id}-goals`;
   resultDiv.appendChild(resLabel);
 
@@ -92,73 +140,38 @@ function drawInfoBar(host: HTMLElement, match: Match) {
     disableButtons(oddsDiv);
   };
   oddsDiv.appendChild(guestWinBtn);
-}
+};
 
-function drawTicket(host: HTMLElement) {
-  const ticketDiv: HTMLElement = document.createElement("div");
-  ticketDiv.className = "ticket-div";
-  host.appendChild(ticketDiv);
+export const drawMatch = (match: Match): void => {
+  const host: HTMLElement = document.querySelector(".table-div");
 
-  const topDiv: HTMLElement = document.createElement("div");
-  topDiv.className = "top-div";
-  ticketDiv.appendChild(topDiv);
+  const matchDiv: HTMLElement = document.createElement("div");
+  matchDiv.className = "match-div";
+  matchDiv.id = `match${match.id}`;
+  host.appendChild(matchDiv);
 
-  middleDiv = document.createElement("div");
-  middleDiv.className = "middle-div";
-  ticketDiv.appendChild(middleDiv);
+  const homeTeamDiv: HTMLElement = document.createElement("div");
+  homeTeamDiv.className = "home-team-div";
+  homeTeamDiv.innerHTML = match.homeTeam;
+  matchDiv.appendChild(homeTeamDiv);
 
-  const bottomDiv: HTMLElement = document.createElement("div");
-  bottomDiv.className = "bottom-div";
-  ticketDiv.appendChild(bottomDiv);
+  const infoDiv: HTMLElement = document.createElement("div");
+  infoDiv.className = "info-bar-div";
+  matchDiv.appendChild(infoDiv);
 
-  const ticketLabel: HTMLElement = document.createElement("label");
-  ticketLabel.innerHTML = "Ticket";
-  ticketLabel.className = "ticket-label";
-  topDiv.appendChild(ticketLabel);
+  const guestTeamDiv: HTMLElement = document.createElement("div");
+  guestTeamDiv.className = "guest-team-div";
+  guestTeamDiv.innerHTML = match.guestTeam;
+  matchDiv.appendChild(guestTeamDiv);
 
-  const balanceLabel: HTMLElement = document.createElement("label");
-  balanceLabel.innerHTML = "Balance: 1000 €";
-  balanceLabel.className = "balance-label";
-  topDiv.appendChild(balanceLabel);
+  drawInfoBar(infoDiv, match);
+};
 
-  const oddLabel: HTMLElement = document.createElement("label");
-  oddLabel.innerHTML = "Odd: 0";
-  oddLabel.className = "odd-label";
-  bottomDiv.appendChild(oddLabel);
-
-  const winLabel: HTMLElement = document.createElement("label");
-  winLabel.innerHTML = "Win: 0 €";
-  winLabel.className = "win-label";
-  bottomDiv.appendChild(winLabel);
-
-  const rowDiv: HTMLElement = document.createElement("div");
-  rowDiv.className = "row-div";
-  bottomDiv.appendChild(rowDiv);
-
-  const stakeLabel: HTMLElement = document.createElement("label");
-  stakeLabel.innerHTML = "Stake: ";
-  stakeLabel.className = "odd-label";
-  rowDiv.appendChild(stakeLabel);
-
-  const stakeInput: HTMLElement = document.createElement("input");
-  stakeInput.setAttribute("type", "number");
-  stakeInput.setAttribute("min", "0");
-  stakeInput.setAttribute("step", "10");
-  stakeInput.className = "stake-input";
-  rowDiv.appendChild(stakeInput);
-
-  const submitBtn: HTMLElement = document.createElement("button");
-  submitBtn.innerHTML = "Submit";
-  submitBtn.className = "submit-btn";
-  submitBtn.onclick = () => startSimulation();
-  bottomDiv.appendChild(submitBtn);
-}
-
-export function drawChosenMatch(
+export const drawChosenMatch = (
   host: HTMLElement,
   match: Match,
   outcome: string
-) {
+): void => {
   const chosenMatchDiv: HTMLElement = document.createElement("div");
   chosenMatchDiv.className = "chosen-match-div";
   chosenMatchDiv.id = `pair${match.id}`;
@@ -193,9 +206,57 @@ export function drawChosenMatch(
       ? match.guestTeamOdd + ""
       : match.tiedOdd + "";
   rightDiv.appendChild(oddLabel);
-}
+};
 
-function disableButtons(div: HTMLElement) {
+export const disableButtons = (div: HTMLElement): void => {
   const buttons = div.querySelectorAll("button");
   buttons.forEach((btn) => (btn.disabled = true));
-}
+};
+
+export const disableAllButtons = (): void => {
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((btn) => (btn.disabled = true));
+};
+
+export const resetTicketView = (balance: number): void => {
+  if (balance !== -1) {
+    const balanceLabel: HTMLElement = document.querySelector(".balance-label");
+    balanceLabel.innerHTML = `Balance: ${balance} €`;
+  }
+
+  const oddLabel: HTMLElement = document.querySelector(".odd-label");
+  oddLabel.innerHTML = "Odd: 0";
+
+  const winLabel: HTMLElement = document.querySelector(".win-label");
+  winLabel.innerHTML = "Win: 0 €";
+
+  const stakeInput: HTMLInputElement = document.querySelector(".stake-input");
+  stakeInput.value = "0";
+
+  clearTicket();
+  refreshMatchTable();
+};
+
+export const clearTicket = (): void => {
+  const divs = document.querySelectorAll(".chosen-match-div");
+  if (divs.length === 0) return;
+  divs.forEach((pair) => pair.remove());
+
+  resetTicket();
+};
+
+export const clearMatchTable = (): void => {
+  const divs = document.querySelectorAll(".match-div");
+  if (divs.length === 0) return;
+  divs.forEach((pair) => pair.remove());
+};
+
+export const refreshMatchTable = (): void => {
+  const resDivs = document.querySelectorAll(".result-label");
+  const minutesDivs = document.querySelectorAll(".minutes-label");
+  const btns = document.querySelectorAll("button");
+
+  btns.forEach((btn) => (btn.disabled = false));
+  resDivs.forEach((div) => (div.innerHTML = "-.-"));
+  minutesDivs.forEach((div) => (div.innerHTML = "-.-"));
+};

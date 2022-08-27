@@ -1,3 +1,6 @@
+button {
+  cursor: pointer;
+}
 .main-div {
   display: flex;
   flex-direction: column;
@@ -7,6 +10,7 @@
   height: 100%;
 }
 .title-div {
+  align-self: flex-start;
   font-weight: 600;
   font-size: 40px;
 }
@@ -22,6 +26,10 @@
   background-color: aquamarine;
   margin: 10px;
 }
+.search-input {
+  margin: 10px;
+  font-size: 20px;
+}
 .ticket-div {
   display: flex;
   flex-direction: column;
@@ -35,6 +43,12 @@
 .ticket-label {
   font-weight: 600;
   font-size: 25px;
+}
+.close-label {
+  font-size: larger;
+  align-self: flex-end;
+  margin-right: 10px;
+  cursor: pointer;
 }
 .balance-label {
   font-size: 20px;
