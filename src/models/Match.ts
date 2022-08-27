@@ -8,5 +8,4 @@ export interface Match {
   outcome: string;
   result: string;
   length: number;
-  ended: boolean;
 }

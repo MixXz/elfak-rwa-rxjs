@@ -8,7 +8,7 @@ import {
   drawChosenMatch,
   resetTicketView,
 } from "../view/drawFunctions";
-import { simulateMatch } from "./matchTableLogic";
+import { simulateMatch, waitSimulation } from "./matchTableLogic";
 
 let ticket: Ticket = new Ticket();
 let balance: Euro = BALANCE;
@@ -19,7 +19,6 @@ export const addMatch = (
   outcome: string
 ): void => {
   match.outcome = outcome;
-  match.ended = false;
 
   ticket.odd = Number((ticket.odd * getOdd(match)).toFixed(2));
   ticket.matches.push(match);
@@ -56,8 +55,6 @@ export const getStake = (): void => {
 };
 
 export const checkPair = (match: Match): void => {
-  match.ended = true;
-
   const ticketPairDiv: HTMLElement = document.getElementById(`pair${match.id}`);
   if (match.result === match.outcome) {
     ticketPairDiv.style.backgroundColor = "green";
@@ -65,18 +62,9 @@ export const checkPair = (match: Match): void => {
     ticket.win = false;
     ticketPairDiv.style.backgroundColor = "red";
   }
-  let proceed: number = 0;
-  ticket.matches.forEach((match) => {
-    if (match.ended) proceed++;
-  });
-
-  if (proceed === ticket.matches.length)
-    setTimeout(() => {
-      checkTicket();
-    }, 500);
 };
 
-const checkTicket = (): void => {
+export const checkTicket = (): void => {
   if (ticket.win) {
     const moneyWon: number = Number((ticket.odd * ticket.stake).toFixed(2));
     balance += moneyWon;
@@ -112,6 +100,8 @@ export const startSimulation = (): void => {
   balanceLabel.innerHTML = `Balance: ${balance} €`;
 
   ticket.matches.forEach((match) => simulateMatch(match));
+
+  waitSimulation();
 };
 
 export const checkIfAdded = (match: Match): void => {

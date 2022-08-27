@@ -2,16 +2,20 @@ import {
   debounceTime,
   filter,
   finalize,
+  forkJoin,
   fromEvent,
   interval,
   map,
+  Observable,
   switchMap,
   take,
 } from "rxjs";
 import { Match } from "../models/Match";
 import { getMatches, getMatchesByQuery } from "../controllers/data";
 import { clearMatchTable, drawMatch } from "../view/drawFunctions";
-import { checkIfAdded, checkPair } from "./ticketLogic";
+import { checkIfAdded, checkPair, checkTicket } from "./ticketLogic";
+
+let obsArray: Observable<number>[] = [];
 
 export const loadMatches = (): void => {
   getMatches().subscribe((matches) =>
@@ -70,29 +74,42 @@ export const simulateMatch = (match: Match): void => {
       ? "2"
       : "X";
 
-  interval(50)
-    .pipe(
-      take(randomMinutes),
-      finalize(() => checkPair(match))
-    )
-    .subscribe((minute: number) => {
-      minutesLabel.innerHTML = `${minute}'`;
+  const observable = interval(50).pipe(
+    take(randomMinutes),
+    finalize(() => checkPair(match))
+  );
 
-      if (minute === 0) {
-        goalsLabel.innerHTML = "0 : 0";
-      }
+  obsArray.push(observable);
 
-      if (minute === homeGoalsMin[0]) {
-        homeGoals++;
-        goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
-        homeGoalsMin.shift();
-      }
-      if (minute === guestGoalsMin[0]) {
-        guestGoals++;
-        goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
-        guestGoalsMin.shift();
-      }
-    });
+  observable.subscribe((minute: number) => {
+    minutesLabel.innerHTML = `${minute}'`;
+
+    if (minute === 0) {
+      goalsLabel.innerHTML = "0 : 0";
+    }
+
+    if (minute === homeGoalsMin[0]) {
+      homeGoals++;
+      goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
+      homeGoalsMin.shift();
+    }
+    if (minute === guestGoalsMin[0]) {
+      guestGoals++;
+      goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
+      guestGoalsMin.shift();
+    }
+  });
+};
+
+export const waitSimulation = (): void => {
+  if (obsArray.length === 0) return;
+
+  forkJoin(obsArray).subscribe(() => {
+    setTimeout(() => {
+      checkTicket();
+    }, 500);
+    obsArray = [];
+  });
 };
 
 const getGoalMinutes = (numOfGoals: number, maxRange: number): number[] => {
@@ -106,9 +123,10 @@ const getGoalMinutes = (numOfGoals: number, maxRange: number): number[] => {
   goalMinutes.sort((a, b) => a - b);
   return goalMinutes;
 };
+
 const handleSearchResults = (matches: Match[]): void => {
   clearMatchTable();
-  
+
   matches.forEach((match) => {
     drawMatch(match);
     checkIfAdded(match);
