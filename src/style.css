@@ -1,5 +1,19 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #dcd6f7;
+}
 button {
   cursor: pointer;
+  background-color: #a6b1e1;
+  border: solid;
+  border-color: #a6b1e1;
+  color: #424874;
+  font-weight: 600;
+}
+button:disabled {
+  background-color: #42487456;
+  color: #a6b1e1;
 }
 .main-div {
   display: flex;
@@ -8,22 +22,25 @@ button {
   align-items: center;
   width: 100%;
   height: 100%;
+  background-color: #dcd6f7;
 }
 .title-div {
   align-self: flex-start;
-  font-weight: 600;
+  font-weight: 750;
   font-size: 40px;
+  margin-left: 10px;
+  color: #424874;
 }
 .cont-div {
   display: flex;
   justify-content: center;
-  background-color: rgb(53, 174, 81);
+  background-color: #dcd6f7;
   width: 100%;
 }
 .table-div {
   width: 80%;
   height: 90%;
-  background-color: aquamarine;
+  background-color: #424874;
   margin: 10px;
 }
 .search-input {
@@ -37,7 +54,8 @@ button {
   width: 30%;
   min-height: 90vh;
   max-height: 90vh;
-  background-color: white;
+  background-color: #424874;
+  color: #f4eeff;
   margin: 10px;
 }
 .ticket-label {
@@ -67,28 +85,33 @@ button {
 .bottom-div {
   display: flex;
   flex-direction: column;
-  background-color: rgb(200, 150, 248);
+  background-color: #424874;
   margin: 0px 5px 10px 5px;
+  font-weight: 600;
 }
 .middle-div {
-  background-color: aquamarine;
+  background-color: #a6b1e1;
   height: 100%;
   margin: 5px;
 }
 .row-div {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  font-weight: 600;
+  font-size: 20px;
 }
 .submit-btn {
   margin: 10px;
+  padding: 5px;
+  font-weight: 600;
+  font-size: 18px;
 }
 .chosen-match-div {
   display: flex;
   justify-content: space-between;
-  height: 40px;
+  height: 50px;
   margin: 5px;
-  background-color: rgba(0, 0, 0, 0.307);
+  background-color: #3f71af76;
 }
 .chosen-match-left-div {
   display: flex;
@@ -110,46 +133,111 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
+  height: 90px;
   margin: 10px;
-  background-color: rgba(0, 0, 0, 0.307);
+  background-color: #dcd6f7;
+  margin-top: 20px;
 }
 .home-team-div {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row-reverse;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.307);
-  height: 70%;
+  background-color: #dcd6f7;
+  color: #424874;
+  font-weight: 600;
+  font-size: 20px;
+  height: 100%;
   width: 100%;
-  margin: 5px;
-  font-size: larger;
 }
 .guest-team-div {
   display: flex;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.307);
-  height: 70%;
+  background-color: #dcd6f7;
+  color: #424874;
+  font-weight: 600;
+  font-size: 20px;
+  height: 100%;
   width: 100%;
-  margin: 5px;
-  font-size: larger;
 }
 .info-bar-div {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  background-color: rgba(0, 0, 0, 0.307);
+  background-color: #424874;
+  color: #dcd6f7;
+  border-radius: 20px;
+  border: solid 5px;
   height: 100%;
   width: 50%;
+  font-weight: 600;
+  font-size: 20px;
 }
 .result-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-weight: 600;
-  font-size: larger;
+  font-size: large;
 }
-
 .odds-div {
   display: flex;
   justify-content: space-evenly;
+}
+.numbers-div {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 200px;
+  width: 100%;
+  background-color: #a6b1e1;
+  color: #dcd6f7;
+}
+.odd-numbers-div {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  height: 120px;
+  background-color: #424874;
+  margin: 10px;
+  text-align: center;
+}
+.middle-numbers-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  height: 90%;
+  background-color: #424874;
+}
+.even-numbers-div {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  height: 120px;
+  background-color: #424874;
+  margin: 10px;
+  text-align: center;
+}
+.checkbox-div {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+.start-btn {
+  margin-top: 20px;
+}
+.ticket-close-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.home-team-logo-div {
+  display: flex;
+  justify-content: center;
+  height: 70px;
+  width: 70px;
+}
+.img {
+  max-width: 100%;
+  max-height: 100%;
 }

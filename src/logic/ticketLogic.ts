@@ -57,10 +57,10 @@ export const getStake = (): void => {
 export const checkPair = (match: Match): void => {
   const ticketPairDiv: HTMLElement = document.getElementById(`pair${match.id}`);
   if (match.result === match.outcome) {
-    ticketPairDiv.style.backgroundColor = "green";
+    ticketPairDiv.style.backgroundColor = "#77DD77";
   } else {
     ticket.win = false;
-    ticketPairDiv.style.backgroundColor = "red";
+    ticketPairDiv.style.backgroundColor = "#FF6961";
   }
 };
 
@@ -117,6 +117,22 @@ export const checkIfAdded = (match: Match): void => {
 
 export const resetTicket = (): void => {
   ticket.reset();
+};
+
+export const addJackpot = (): void => {
+  alert("YOU WON 10 000 € JACKPOT!");
+
+  balance += 10000;
+
+  const balLbl: HTMLElement = document.querySelector(".balance-label");
+  balLbl.innerHTML = `Balance: ${balance} €`;
+};
+
+export const decreaseBalance = (price: Euro): void => {
+  balance -= price;
+
+  const balLbl: HTMLElement = document.querySelector(".balance-label");
+  balLbl.innerHTML = `Balance: ${balance} €`;
 };
 
 const getOdd = (match: Match): number => {

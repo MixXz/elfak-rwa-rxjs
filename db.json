@@ -2,32 +2,40 @@
   "matches": [
     {
       "id": 1,
-      "homeTeam": "Union Berlin",
-      "guestTeam": "RB Leipzig",
+      "homeTeam": "Bayern",
+      "guestTeam": "Crvena Zvezda",
+      "homeTeamLogo": "bayern.png",
+      "guestTeamLogo": "czv.png",
       "homeTeamOdd": 3.25,
       "guestTeamOdd": 2.2,
       "tiedOdd": 3.43
     },
     {
       "id": 2,
-      "homeTeam": "Vojvodina",
+      "homeTeam": "Partizan",
       "guestTeam": "Mladost",
-      "homeTeamOdd": 1.25,
-      "guestTeamOdd": 2.21,
+      "homeTeamLogo": "partizan.png",
+      "guestTeamLogo": "mladost.png",
+      "homeTeamOdd": 4.25,
+      "guestTeamOdd": 1.21,
       "tiedOdd": 3.34
     },
     {
       "id": 3,
-      "homeTeam": "Napredak",
+      "homeTeam": "Radnički Niš",
       "guestTeam": "Sevilla",
+      "homeTeamLogo": "radnicki.png",
+      "guestTeamLogo": "sevilla.png",
       "homeTeamOdd": 2.22,
       "guestTeamOdd": 1.75,
       "tiedOdd": 4.22
     },
     {
       "id": 4,
-      "homeTeam": "Juventus",
+      "homeTeam": "Barcelona",
       "guestTeam": "Atletico Madrid",
+      "homeTeamLogo": "barcelona.png",
+      "guestTeamLogo": "atl.png",
       "homeTeamOdd": 1.99,
       "guestTeamOdd": 1.75,
       "tiedOdd": 2.22
@@ -36,6 +44,8 @@
       "id": 5,
       "homeTeam": "Atalanta",
       "guestTeam": "AS Roma",
+      "homeTeamLogo": "atalanta.png",
+      "guestTeamLogo": "roma.png",
       "homeTeamOdd": 1.51,
       "guestTeamOdd": 3.33,
       "tiedOdd": 3.72
@@ -43,41 +53,51 @@
     {
       "id": 6,
       "homeTeam": "AC Milan",
-      "guestTeam": "Partizan",
-      "homeTeamOdd": 1.25,
-      "guestTeamOdd": 6.02,
+      "guestTeam": "Inter",
+      "homeTeamLogo": "milan.png",
+      "guestTeamLogo": "inter.png",
+      "homeTeamOdd": 5.25,
+      "guestTeamOdd": 1.22,
       "tiedOdd": 5.2
     },
     {
       "id": 7,
-      "homeTeam": "Radnički Niš",
+      "homeTeam": "Bačka Topola",
       "guestTeam": "Real Madrid",
+      "homeTeamLogo": "bct.png",
+      "guestTeamLogo": "real.png",
       "homeTeamOdd": 1.25,
       "guestTeamOdd": 4.41,
       "tiedOdd": 3.22
     },
     {
       "id": 8,
-      "homeTeam": "Javor",
-      "guestTeam": "Spartak Subotica",
-      "homeTeamOdd": 2.25,
-      "guestTeamOdd": 1.11,
-      "tiedOdd": 6.81
+      "homeTeam": "Ajax",
+      "guestTeam": "PSG",
+      "homeTeamLogo": "ajax.png",
+      "guestTeamLogo": "psg.png",
+      "homeTeamOdd": 1.01,
+      "guestTeamOdd": 6.24,
+      "tiedOdd": 3.81
     },
     {
       "id": 9,
-      "homeTeam": "Atalanta",
-      "guestTeam": "AS Roma",
+      "homeTeam": "Borussia Dortmund",
+      "guestTeam": "RB Leipzig",
+      "homeTeamLogo": "dortmund.png",
+      "guestTeamLogo": "leip.png",
       "homeTeamOdd": 1.54,
       "guestTeamOdd": 3.33,
       "tiedOdd": 3.72
     },
     {
       "id": 10,
-      "homeTeam": "Bayern",
-      "guestTeam": "Crvena Zvezda",
-      "homeTeamOdd": 9.51,
-      "guestTeamOdd": 1.01,
+      "homeTeam": "Napredak",
+      "guestTeam": "Fiorentina",
+      "homeTeamLogo": "napredak.png",
+      "guestTeamLogo": "fiorentina.png",
+      "homeTeamOdd": 3.31,
+      "guestTeamOdd": 2.53,
       "tiedOdd": 10.11
     }
   ]

@@ -1,5 +1,6 @@
 import { Match } from "../models/Match";
 import { addMatch, resetTicket, startSimulation } from "../logic/ticketLogic";
+import { simulateNumbers } from "../logic/numbersLogic";
 
 export const drawDashboard = (host: HTMLElement): void => {
   const mainCont: HTMLElement = document.createElement("div");
@@ -7,7 +8,7 @@ export const drawDashboard = (host: HTMLElement): void => {
   host.appendChild(mainCont);
 
   const titleDiv: HTMLElement = document.createElement("div");
-  titleDiv.innerHTML = "Football Betting Simulator";
+  titleDiv.innerHTML = "BETTING SIMULATOR";
   titleDiv.className = "title-div";
   mainCont.appendChild(titleDiv);
 
@@ -19,12 +20,17 @@ export const drawDashboard = (host: HTMLElement): void => {
   tableDiv.className = "table-div";
   cont.appendChild(tableDiv);
 
+  const numbersDiv: HTMLElement = document.createElement("div");
+  numbersDiv.className = "numbers-div";
+  tableDiv.appendChild(numbersDiv);
+
   const searchInput: HTMLInputElement = document.createElement("input");
   searchInput.className = "search-input";
   searchInput.setAttribute("placeholder", "Search match");
   tableDiv.appendChild(searchInput);
 
   drawTicket(cont);
+  drawNumberTicket(numbersDiv);
 };
 
 const drawTicket = (host: HTMLElement): void => {
@@ -44,16 +50,20 @@ const drawTicket = (host: HTMLElement): void => {
   bottomDiv.className = "bottom-div";
   ticketDiv.appendChild(bottomDiv);
 
-  const closeLabel: HTMLElement = document.createElement("label");
-  closeLabel.innerHTML = "✖";
-  closeLabel.className = "close-label";
-  closeLabel.onclick = () => resetTicketView(-1);
-  topDiv.appendChild(closeLabel);
+  let rowDiv: HTMLElement = document.createElement("div");
+  rowDiv.className = "ticket-close-div";
+  topDiv.appendChild(rowDiv);
 
   const ticketLabel: HTMLElement = document.createElement("label");
   ticketLabel.innerHTML = "Ticket";
   ticketLabel.className = "ticket-label";
-  topDiv.appendChild(ticketLabel);
+  rowDiv.appendChild(ticketLabel);
+
+  const closeLabel: HTMLElement = document.createElement("label");
+  closeLabel.innerHTML = "✖";
+  closeLabel.className = "close-label";
+  closeLabel.onclick = () => resetTicketView(-1);
+  rowDiv.appendChild(closeLabel);
 
   const balanceLabel: HTMLElement = document.createElement("label");
   balanceLabel.innerHTML = "Balance: 1000 €";
@@ -70,13 +80,13 @@ const drawTicket = (host: HTMLElement): void => {
   winLabel.className = "win-label";
   bottomDiv.appendChild(winLabel);
 
-  const rowDiv: HTMLElement = document.createElement("div");
+  rowDiv = document.createElement("div");
   rowDiv.className = "row-div";
   bottomDiv.appendChild(rowDiv);
 
   const stakeLabel: HTMLElement = document.createElement("label");
-  stakeLabel.innerHTML = "Stake: ";
-  stakeLabel.className = "odd-label";
+  stakeLabel.innerHTML = "Stake:";
+  stakeLabel.style.marginRight = "10px";
   rowDiv.appendChild(stakeLabel);
 
   const stakeInput: HTMLElement = document.createElement("input");
@@ -92,6 +102,121 @@ const drawTicket = (host: HTMLElement): void => {
   submitBtn.className = "submit-btn";
   submitBtn.onclick = () => startSimulation();
   bottomDiv.appendChild(submitBtn);
+};
+
+const drawNumberTicket = (host: HTMLElement): void => {
+  const oddNumbersDiv: HTMLElement = document.createElement("div");
+  oddNumbersDiv.className = "odd-numbers-div";
+  host.appendChild(oddNumbersDiv);
+
+  let lbl: HTMLElement = document.createElement("label");
+  lbl.innerHTML = "ODD";
+  oddNumbersDiv.appendChild(lbl);
+
+  lbl = document.createElement("label");
+  lbl.className = "odd-number";
+  lbl.innerHTML = "";
+  lbl.style.fontSize = "80px";
+  oddNumbersDiv.appendChild(lbl);
+
+  const middleNumbersDiv: HTMLElement = document.createElement("div");
+  middleNumbersDiv.className = "middle-numbers-div";
+  host.appendChild(middleNumbersDiv);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "WIN 10 000 € JACKPOT";
+  lbl.style.fontSize = "20px";
+  lbl.style.fontWeight = "600";
+  middleNumbersDiv.appendChild(lbl);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "Sum: 50";
+  lbl.style.fontSize = "20px";
+  middleNumbersDiv.appendChild(lbl);
+
+  const checkboxDiv = document.createElement("div");
+  checkboxDiv.className = "checkbox-div";
+  middleNumbersDiv.appendChild(checkboxDiv);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "Less";
+  lbl.style.fontSize = "15px";
+  checkboxDiv.appendChild(lbl);
+
+  const lessCheck = document.createElement("input");
+  lessCheck.setAttribute("type", "radio");
+  lessCheck.setAttribute("name", "NekiName");
+  lessCheck.checked = true;
+  lessCheck.id = "less-check";
+  checkboxDiv.appendChild(lessCheck);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "Greater";
+  lbl.style.fontSize = "15px";
+  lbl.style.marginLeft = "10px";
+  checkboxDiv.appendChild(lbl);
+
+  const greaterCheck = document.createElement("input");
+  greaterCheck.id = "greater-check";
+  greaterCheck.setAttribute("type", "radio");
+  greaterCheck.setAttribute("name", "NekiName");
+  checkboxDiv.appendChild(greaterCheck);
+
+  const pairDiv = document.createElement("div");
+  pairDiv.className = "pair-div";
+  middleNumbersDiv.appendChild(pairDiv);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "Pair:";
+  lbl.style.fontSize = "20px";
+  lbl.style.marginRight = "10px";
+  pairDiv.appendChild(lbl);
+
+  const firstPairInput: HTMLInputElement = document.createElement("input");
+  firstPairInput.className = "first-pair-input";
+  firstPairInput.setAttribute("type", "number");
+  firstPairInput.setAttribute("min", "1");
+  firstPairInput.setAttribute("max", "39");
+  firstPairInput.setAttribute("step", "2");
+  firstPairInput.setAttribute("value", "1");
+  firstPairInput.style.width = "30px";
+  pairDiv.appendChild(firstPairInput);
+
+  const secondPairInput: HTMLInputElement = document.createElement("input");
+  secondPairInput.className = "second-pair-input";
+  secondPairInput.setAttribute("type", "number");
+  secondPairInput.setAttribute("min", "2");
+  secondPairInput.setAttribute("max", "40");
+  secondPairInput.setAttribute("step", "2");
+  secondPairInput.setAttribute("value", "2");
+  secondPairInput.style.width = "30px";
+  pairDiv.appendChild(secondPairInput);
+
+  const startBtn = document.createElement("button");
+  startBtn.innerHTML = "START";
+  startBtn.className = "start-btn";
+  startBtn.onclick = () => simulateNumbers();
+  middleNumbersDiv.appendChild(startBtn);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "";
+  lbl.className = "pairs-lbl";
+  lbl.style.marginTop = "10px";
+  middleNumbersDiv.appendChild(lbl);
+
+  const evenNumbersDiv: HTMLElement = document.createElement("div");
+  evenNumbersDiv.className = "even-numbers-div";
+  host.appendChild(evenNumbersDiv);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "EVEN";
+  evenNumbersDiv.appendChild(lbl);
+
+  lbl = document.createElement("label");
+  lbl.className = "even-number";
+  lbl.innerHTML = "";
+  lbl.style.fontSize = "80px";
+  evenNumbersDiv.appendChild(lbl);
 };
 
 const drawInfoBar = (host: HTMLElement, match: Match): void => {
@@ -152,8 +277,21 @@ export const drawMatch = (match: Match): void => {
 
   const homeTeamDiv: HTMLElement = document.createElement("div");
   homeTeamDiv.className = "home-team-div";
-  homeTeamDiv.innerHTML = match.homeTeam;
   matchDiv.appendChild(homeTeamDiv);
+
+  const homeTeamlogo: HTMLElement = document.createElement("div");
+  homeTeamlogo.className = "home-team-logo-div";
+  homeTeamDiv.appendChild(homeTeamlogo);
+
+  let img = document.createElement("img");
+  img.className = "img";
+  img.src = `./logos/${match.homeTeamLogo}`;
+  homeTeamlogo.appendChild(img);
+
+  let lbl = document.createElement("label");
+  lbl.innerHTML = match.homeTeam;
+  lbl.style.marginRight = "10px";
+  homeTeamDiv.appendChild(lbl);
 
   const infoDiv: HTMLElement = document.createElement("div");
   infoDiv.className = "info-bar-div";
@@ -161,8 +299,21 @@ export const drawMatch = (match: Match): void => {
 
   const guestTeamDiv: HTMLElement = document.createElement("div");
   guestTeamDiv.className = "guest-team-div";
-  guestTeamDiv.innerHTML = match.guestTeam;
   matchDiv.appendChild(guestTeamDiv);
+
+  const guestTeamLogo: HTMLElement = document.createElement("div");
+  guestTeamLogo.className = "home-team-logo-div";
+  guestTeamDiv.appendChild(guestTeamLogo);
+
+  img = document.createElement("img");
+  img.className = "img";
+  img.src = `./logos/${match.guestTeamLogo}`;
+  guestTeamLogo.appendChild(img);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = match.guestTeam;
+  lbl.style.marginLeft = "10px";
+  guestTeamDiv.appendChild(lbl);
 
   drawInfoBar(infoDiv, match);
 };

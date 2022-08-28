@@ -47,11 +47,11 @@ export const simulateMatch = (match: Match): void => {
   const randomMinutes: number = Math.floor(Math.random() * 10 + 1) + 90;
 
   let homeGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 7),
+    Math.floor(Math.random() * 6),
     randomMinutes
   );
   let guestGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 7),
+    Math.floor(Math.random() * 6),
     randomMinutes
   );
 
@@ -93,6 +93,7 @@ export const simulateMatch = (match: Match): void => {
       goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
       homeGoalsMin.shift();
     }
+
     if (minute === guestGoalsMin[0]) {
       guestGoals++;
       goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
