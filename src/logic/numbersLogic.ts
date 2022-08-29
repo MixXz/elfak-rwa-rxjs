@@ -1,4 +1,13 @@
-import { finalize, interval, map, merge, Observable, take, zip } from "rxjs";
+import {
+  finalize,
+  interval,
+  map,
+  merge,
+  Observable,
+  reduce,
+  take,
+  zip,
+} from "rxjs";
 import { NumberTicket } from "../models/NumberTicket";
 import { addJackpot, decreaseBalance } from "./ticketLogic";
 
@@ -56,35 +65,29 @@ const checkPairNums = (): void => {
 };
 
 const checkSum = (): void => {
-  let sum: number = 0;
   merge(oddInterval, evenInterval)
-    .pipe(
-      finalize(() => {
-        if (
-          (numberTicket.less && sum < 50) ||
-          (!numberTicket.less && sum > 50)
-        ) {
-          numberTicket.lessOrGreaterWin = true;
-        }
+    .pipe(reduce((acc: number, x: number) => acc + x, 0))
+    .subscribe((sum) => {
+      if ((numberTicket.less && sum < 50) || (!numberTicket.less && sum > 50)) {
+        numberTicket.lessOrGreaterWin = true;
+      }
 
-        if (numberTicket.lessOrGreaterWin && numberTicket.pairWin) {
-          setTimeout(() => {
-            addJackpot();
-          }, 500);
-          numberTicket.pairWin = false;
-          numberTicket.lessOrGreaterWin = false;
-        }
+      if (numberTicket.lessOrGreaterWin && numberTicket.pairWin) {
+        setTimeout(() => {
+          addJackpot();
+        }, 300);
+        numberTicket.pairWin = false;
+        numberTicket.lessOrGreaterWin = false;
+      }
 
-        const lbl = document.querySelector(".pairs-lbl");
-        lbl.innerHTML += `SUM = ${sum}`;
+      const lbl = document.querySelector(".pairs-lbl");
+      lbl.innerHTML += `SUM = ${sum}`;
 
-        let btn: HTMLButtonElement = <HTMLButtonElement>(
-          document.querySelector(".start-btn")
-        );
-        btn.disabled = false;
-      })
-    )
-    .subscribe((x) => (sum += Number(x)));
+      let btn: HTMLButtonElement = <HTMLButtonElement>(
+        document.querySelector(".start-btn")
+      );
+      btn.disabled = false;
+    });
 };
 
 const getInputs = (): void => {

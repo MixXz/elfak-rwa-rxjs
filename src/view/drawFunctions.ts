@@ -124,14 +124,15 @@ const drawNumberTicket = (host: HTMLElement): void => {
   host.appendChild(middleNumbersDiv);
 
   lbl = document.createElement("label");
-  lbl.innerHTML = "WIN 10 000 € JACKPOT";
+  lbl.innerHTML = "Lucky Numbers";
   lbl.style.fontSize = "20px";
   lbl.style.fontWeight = "600";
   middleNumbersDiv.appendChild(lbl);
 
   lbl = document.createElement("label");
-  lbl.innerHTML = "Sum: 50";
-  lbl.style.fontSize = "20px";
+  lbl.innerHTML = "Win 10 000 € Jackpot";
+  lbl.style.fontSize = "15px";
+  lbl.style.fontWeight = "600";
   middleNumbersDiv.appendChild(lbl);
 
   const checkboxDiv = document.createElement("div");
@@ -141,6 +142,7 @@ const drawNumberTicket = (host: HTMLElement): void => {
   lbl = document.createElement("label");
   lbl.innerHTML = "Less";
   lbl.style.fontSize = "15px";
+  lbl.style.marginLeft = "20px";
   checkboxDiv.appendChild(lbl);
 
   const lessCheck = document.createElement("input");
@@ -151,9 +153,8 @@ const drawNumberTicket = (host: HTMLElement): void => {
   checkboxDiv.appendChild(lessCheck);
 
   lbl = document.createElement("label");
-  lbl.innerHTML = "Greater";
-  lbl.style.fontSize = "15px";
-  lbl.style.marginLeft = "10px";
+  lbl.innerHTML = " < Sum 50 >";
+  lbl.style.fontSize = "20px";
   checkboxDiv.appendChild(lbl);
 
   const greaterCheck = document.createElement("input");
@@ -161,6 +162,11 @@ const drawNumberTicket = (host: HTMLElement): void => {
   greaterCheck.setAttribute("type", "radio");
   greaterCheck.setAttribute("name", "NekiName");
   checkboxDiv.appendChild(greaterCheck);
+
+  lbl = document.createElement("label");
+  lbl.innerHTML = "Greater";
+  lbl.style.fontSize = "15px";
+  checkboxDiv.appendChild(lbl);
 
   const pairDiv = document.createElement("div");
   pairDiv.className = "pair-div";
@@ -176,7 +182,7 @@ const drawNumberTicket = (host: HTMLElement): void => {
   firstPairInput.className = "first-pair-input";
   firstPairInput.setAttribute("type", "number");
   firstPairInput.setAttribute("min", "1");
-  firstPairInput.setAttribute("max", "39");
+  firstPairInput.setAttribute("max", "9");
   firstPairInput.setAttribute("step", "2");
   firstPairInput.setAttribute("value", "1");
   firstPairInput.style.width = "30px";
@@ -186,7 +192,7 @@ const drawNumberTicket = (host: HTMLElement): void => {
   secondPairInput.className = "second-pair-input";
   secondPairInput.setAttribute("type", "number");
   secondPairInput.setAttribute("min", "2");
-  secondPairInput.setAttribute("max", "40");
+  secondPairInput.setAttribute("max", "10");
   secondPairInput.setAttribute("step", "2");
   secondPairInput.setAttribute("value", "2");
   secondPairInput.style.width = "30px";
@@ -243,7 +249,8 @@ const drawInfoBar = (host: HTMLElement, match: Match): void => {
   host.appendChild(oddsDiv);
 
   const homeWinBtn: HTMLElement = document.createElement("button");
-  homeWinBtn.innerHTML = `1: ${match.homeTeamOdd}`;
+  homeWinBtn.innerHTML = `1 ${match.homeTeamOdd}`;
+  homeWinBtn.className = "match-odd-btn";
   homeWinBtn.onclick = () => {
     addMatch(middleDiv, match, "1");
     disableButtons(oddsDiv);
@@ -251,7 +258,8 @@ const drawInfoBar = (host: HTMLElement, match: Match): void => {
   oddsDiv.appendChild(homeWinBtn);
 
   const tiedBtn: HTMLElement = document.createElement("button");
-  tiedBtn.innerHTML = `X: ${match.tiedOdd}`;
+  tiedBtn.innerHTML = `X ${match.tiedOdd}`;
+  tiedBtn.className = "match-odd-btn";
   tiedBtn.onclick = () => {
     addMatch(middleDiv, match, "X");
     disableButtons(oddsDiv);
@@ -259,7 +267,8 @@ const drawInfoBar = (host: HTMLElement, match: Match): void => {
   oddsDiv.appendChild(tiedBtn);
 
   const guestWinBtn: HTMLElement = document.createElement("button");
-  guestWinBtn.innerHTML = `2: ${match.guestTeamOdd}`;
+  guestWinBtn.innerHTML = `2 ${match.guestTeamOdd}`;
+  guestWinBtn.className = "match-odd-btn";
   guestWinBtn.onclick = () => {
     addMatch(middleDiv, match, "2");
     disableButtons(oddsDiv);

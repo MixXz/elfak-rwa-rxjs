@@ -7,7 +7,7 @@
       "homeTeamLogo": "bayern.png",
       "guestTeamLogo": "czv.png",
       "homeTeamOdd": 3.25,
-      "guestTeamOdd": 2.2,
+      "guestTeamOdd": 2.21,
       "tiedOdd": 3.43
     },
     {
@@ -58,7 +58,7 @@
       "guestTeamLogo": "inter.png",
       "homeTeamOdd": 5.25,
       "guestTeamOdd": 1.22,
-      "tiedOdd": 5.2
+      "tiedOdd": 5.21
     },
     {
       "id": 7,

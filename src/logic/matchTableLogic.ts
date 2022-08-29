@@ -47,11 +47,11 @@ export const simulateMatch = (match: Match): void => {
   const randomMinutes: number = Math.floor(Math.random() * 10 + 1) + 90;
 
   let homeGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 6),
+    Math.floor(Math.random() * 4),
     randomMinutes
   );
   let guestGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 6),
+    Math.floor(Math.random() * 4),
     randomMinutes
   );
 
@@ -74,7 +74,7 @@ export const simulateMatch = (match: Match): void => {
       ? "2"
       : "X";
 
-  const observable = interval(50).pipe(
+  const observable = interval(100).pipe(
     take(randomMinutes),
     finalize(() => checkPair(match))
   );
