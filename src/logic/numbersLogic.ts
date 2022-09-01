@@ -1,83 +1,89 @@
 import {
-  finalize,
-  interval,
-  map,
-  merge,
-  Observable,
-  reduce,
-  take,
-  zip,
-} from "rxjs";
-import { NumberTicket } from "../models/NumberTicket";
-import { addJackpot, decreaseBalance } from "./ticketLogic";
-
-let numberTicket: NumberTicket = new NumberTicket();
-
-let oddInterval: Observable<number | number[]>;
-let evenInterval: Observable<number | number[]>;
+  NUMBERS_DRAW_COUNT,
+  NUMBERS_DRAW_INTERVAL,
+  NUMBERS_JACKPOT,
+  NUMBERS_MAX_RANGE,
+  NUMBERS_MIN_RANGE,
+  NUMBERS_SUM,
+  NUMBERS_TICKET,
+  NUMBERS_TICKET_PRICE,
+  PLAYER,
+} from "../constants";
+import { interval, map, merge, Observable, reduce, take, zip } from "rxjs";
+import { getRandomNum } from "../common";
+import {
+  resetNumTicketView,
+  updateEvenNumLabel,
+  updateOddNumLabel,
+} from "../view/numberTicketView";
+import { updateBalanceLabel } from "../view/ticketView";
 
 export const simulateNumbers = (): void => {
   getInputs();
-  decreaseBalance(10);
 
-  oddInterval = interval(200).pipe(
+  PLAYER.balance -= NUMBERS_TICKET_PRICE;
+
+  const oddInterval = interval(NUMBERS_DRAW_INTERVAL).pipe(
     map(() => generateOddNumber()),
-    take(5)
+    take(NUMBERS_DRAW_COUNT)
   );
 
-  evenInterval = interval(200).pipe(
+  const evenInterval = interval(NUMBERS_DRAW_INTERVAL).pipe(
     map(() => generateEvenNumber()),
-    take(5)
+    take(NUMBERS_DRAW_COUNT)
   );
 
   oddInterval.subscribe((num) => {
-    const lbl = document.querySelector(".odd-number");
-    lbl.innerHTML = `${num}`;
+    updateOddNumLabel(num);
   });
 
   evenInterval.subscribe((num) => {
-    const lbl = document.querySelector(".even-number");
-    lbl.innerHTML = `${num}`;
+    updateEvenNumLabel(num);
   });
 
-  checkPairNums();
-  checkSum();
+  checkPairNums(oddInterval, evenInterval);
+  checkSum(oddInterval, evenInterval);
 
-  const lbl = document.querySelector(".pairs-lbl");
-  lbl.innerHTML = "";
-
-  let btn: HTMLButtonElement = <HTMLButtonElement>(
-    document.querySelector(".start-btn")
-  );
-  btn.disabled = true;
+  resetNumTicketView();
 };
 
-const checkPairNums = (): void => {
-  zip(oddInterval, evenInterval)
+const checkPairNums = (
+  odd: Observable<number>,
+  even: Observable<number>
+): void => {
+  zip(odd, even)
     .pipe(map(([odd, even]) => ({ odd, even })))
     .subscribe((x) => {
-      if (x.even === numberTicket.pairEven && x.odd === numberTicket.pairOdd) {
-        numberTicket.pairWin = true;
+      if (
+        x.even === NUMBERS_TICKET.pairEven &&
+        x.odd === NUMBERS_TICKET.pairOdd
+      ) {
+        NUMBERS_TICKET.pairWin = true;
       }
       const lbl = document.querySelector(".pairs-lbl");
       lbl.innerHTML += `[${x.odd}, ${x.even}] `;
     });
 };
 
-const checkSum = (): void => {
-  merge(oddInterval, evenInterval)
+const checkSum = (odd: Observable<number>, even: Observable<number>): void => {
+  merge(odd, even)
     .pipe(reduce((acc: number, x: number) => acc + x, 0))
     .subscribe((sum) => {
-      if ((numberTicket.less && sum < 50) || (!numberTicket.less && sum > 50)) {
-        numberTicket.lessOrGreaterWin = true;
+      if (
+        (NUMBERS_TICKET.less && sum < NUMBERS_SUM) ||
+        (!NUMBERS_TICKET.less && sum > NUMBERS_SUM)
+      ) {
+        NUMBERS_TICKET.lessOrGreaterWin = true;
       }
 
-      if (numberTicket.lessOrGreaterWin && numberTicket.pairWin) {
+      if (NUMBERS_TICKET.lessOrGreaterWin && NUMBERS_TICKET.pairWin) {
         setTimeout(() => {
-          addJackpot();
-        }, 300);
-        numberTicket.pairWin = false;
-        numberTicket.lessOrGreaterWin = false;
+          alert("YOU WON 10 000 € JACKPOT!");
+          PLAYER.balance += NUMBERS_JACKPOT;
+          NUMBERS_TICKET.pairWin = false;
+          NUMBERS_TICKET.lessOrGreaterWin = false;
+          updateBalanceLabel();
+        }, 100);
       }
 
       const lbl = document.querySelector(".pairs-lbl");
@@ -101,15 +107,15 @@ const getInputs = (): void => {
     document.querySelector(".second-pair-input")
   );
 
-  numberTicket.pairOdd = Number(num1.value);
-  numberTicket.pairEven = Number(num2.value);
-  numberTicket.less = less.checked;
+  NUMBERS_TICKET.pairOdd = Number(num1.value);
+  NUMBERS_TICKET.pairEven = Number(num2.value);
+  NUMBERS_TICKET.less = less.checked;
 };
 
 const generateOddNumber = (): number => {
-  let randNum: number = Math.floor(Math.random() * 9) + 1;
+  let randNum: number = getRandomNum(NUMBERS_MIN_RANGE, NUMBERS_MAX_RANGE);
   if (randNum % 2 === 0) {
-    if (randNum === 40) {
+    if (randNum === NUMBERS_MAX_RANGE) {
       randNum = randNum - 1;
     } else {
       randNum = randNum + 1;
@@ -120,7 +126,7 @@ const generateOddNumber = (): number => {
 };
 
 const generateEvenNumber = (): number => {
-  let randNum: number = Math.floor(Math.random() * 8) + 2;
+  let randNum: number = getRandomNum(NUMBERS_MIN_RANGE + 1, NUMBERS_MAX_RANGE);
   if (randNum % 2 === 1) {
     randNum = randNum + 1;
   }

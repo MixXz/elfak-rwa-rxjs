@@ -1,17 +1,15 @@
+import { TICKET, PLAYER, INPUT_DEBOUNCE } from "../constants";
 import { debounceTime, fromEvent, map } from "rxjs";
-import { BALANCE, Euro } from "../helper";
 import { Match } from "../models/Match";
-import { Ticket } from "../models/Ticket";
-import {
-  disableAllButtons,
-  disableButtons,
-  drawChosenMatch,
-  resetTicketView,
-} from "../view/drawFunctions";
+import { disableAllButtons, disableButtons } from "../view/matchView";
 import { simulateMatch, waitSimulation } from "./matchTableLogic";
-
-let ticket: Ticket = new Ticket();
-let balance: Euro = BALANCE;
+import {
+  drawChosenMatch,
+  refreshTicketLabels,
+  resetTicketView,
+  updateBalanceLabel,
+  updateWinLabel,
+} from "../view/ticketView";
 
 export const addMatch = (
   host: HTMLElement,
@@ -20,38 +18,48 @@ export const addMatch = (
 ): void => {
   match.outcome = outcome;
 
-  ticket.odd = Number((ticket.odd * getOdd(match)).toFixed(2));
-  ticket.matches.push(match);
+  TICKET.odd = Number((TICKET.odd * getOdd(match)).toFixed(2));
+  TICKET.matches.push(match);
 
   drawChosenMatch(host, match, outcome);
-
-  const oddLabel = document.querySelector(".odd-label");
-  oddLabel.innerHTML = `Odd: ${ticket.odd}`;
-
-  const winLabel = document.querySelector(".win-label");
-  winLabel.innerHTML = `Win: ${
-    ticket.stake === 0
-      ? 0
-      : Number((ticket.odd * Number(ticket.stake)).toFixed(2))
-  } €`;
+  refreshTicketLabels();
 };
 
 export const getStake = (): void => {
-  const stakeInput = document.querySelector(".stake-input");
+  const stakeInput: HTMLInputElement = document.querySelector(".stake-input");
   fromEvent(stakeInput, "input")
     .pipe(
-      debounceTime(200),
+      debounceTime(INPUT_DEBOUNCE),
       map((ev: InputEvent) => (<HTMLInputElement>ev.target).value)
     )
     .subscribe((stake) => {
-      ticket.stake = Number(stake);
-      const winLabel = document.querySelector(".win-label");
-      winLabel.innerHTML = `Win: ${
-        stake === "" || ticket.odd === 1
-          ? 0
-          : Number((ticket.odd * Number(stake)).toFixed(2))
-      } €`;
+      TICKET.stake = Number(stake);
+
+      updateWinLabel(stake);
     });
+};
+
+export const startSimulation = (): void => {
+  if (TICKET.stake === 0) {
+    alert("Enter stake!");
+    return;
+  }
+
+  if (TICKET.stake > PLAYER.balance) {
+    alert("Insufficient funds!");
+    return;
+  }
+
+  if (TICKET.matches.length === 0) return;
+
+  PLAYER.balance -= TICKET.stake;
+
+  disableAllButtons();
+  updateBalanceLabel();
+
+  TICKET.matches.forEach((match) => simulateMatch(match));
+
+  waitSimulation();
 };
 
 export const checkPair = (match: Match): void => {
@@ -59,55 +67,30 @@ export const checkPair = (match: Match): void => {
   if (match.result === match.outcome) {
     ticketPairDiv.style.backgroundColor = "#77DD77";
   } else {
-    ticket.win = false;
+    TICKET.win = false;
     ticketPairDiv.style.backgroundColor = "#FF6961";
   }
 };
 
 export const checkTicket = (): void => {
-  if (ticket.win) {
-    const moneyWon: number = Number((ticket.odd * ticket.stake).toFixed(2));
-    balance += moneyWon;
+  if (TICKET.win) {
+    const moneyWon: number = Number((TICKET.odd * TICKET.stake).toFixed(2));
+    PLAYER.balance += moneyWon;
 
-    alert(`YOU WON ${moneyWon} €!\nBalance: ${balance} €`);
-    ticket.reset();
-    resetTicketView(balance);
+    alert(`YOU WON ${moneyWon} €!\nBalance: ${PLAYER.balance} €`);
+    resetTicket();
+    resetTicketView();
   } else {
-    alert(`YOU LOST ${ticket.stake} €\nBalance: ${balance} €`);
-    ticket.reset();
-    resetTicketView(balance);
+    alert(`YOU LOST ${TICKET.stake} €\nBalance: ${PLAYER.balance} €`);
+    resetTicket();
+    resetTicketView();
   }
-};
-
-export const startSimulation = (): void => {
-  if (ticket.stake === 0) {
-    alert("Enter stake!");
-    return;
-  }
-
-  if (ticket.stake > balance) {
-    alert("Insufficient funds!");
-    return;
-  }
-
-  if (ticket.matches.length === 0) return;
-
-  disableAllButtons();
-
-  balance -= ticket.stake;
-
-  const balanceLabel: HTMLElement = document.querySelector(".balance-label");
-  balanceLabel.innerHTML = `Balance: ${balance} €`;
-
-  ticket.matches.forEach((match) => simulateMatch(match));
-
-  waitSimulation();
 };
 
 export const checkIfAdded = (match: Match): void => {
-  if (ticket.matches.length === 0) return;
+  if (TICKET.matches.length === 0) return;
 
-  ticket.matches.forEach((m) => {
+  TICKET.matches.forEach((m) => {
     if (m.id === match.id) {
       const matchDiv: HTMLElement = document.getElementById(`match${match.id}`);
       disableButtons(matchDiv);
@@ -116,23 +99,10 @@ export const checkIfAdded = (match: Match): void => {
 };
 
 export const resetTicket = (): void => {
-  ticket.reset();
-};
-
-export const addJackpot = (): void => {
-  alert("YOU WON 10 000 € JACKPOT!");
-
-  balance += 10000;
-
-  const balLbl: HTMLElement = document.querySelector(".balance-label");
-  balLbl.innerHTML = `Balance: ${balance} €`;
-};
-
-export const decreaseBalance = (price: Euro): void => {
-  balance -= price;
-
-  const balLbl: HTMLElement = document.querySelector(".balance-label");
-  balLbl.innerHTML = `Balance: ${balance} €`;
+  TICKET.matches = [];
+  TICKET.odd = 1;
+  TICKET.stake = 0;
+  TICKET.win = true;
 };
 
 const getOdd = (match: Match): number => {

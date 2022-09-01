@@ -1,5 +1,5 @@
 import { from, Observable } from "rxjs";
-import { SERVER_ADDRESS } from "../helper";
+import { SERVER_ADDRESS } from "../constants";
 import { Match } from "../models/Match";
 
 export const getMatches = (): Observable<Match[]> => {

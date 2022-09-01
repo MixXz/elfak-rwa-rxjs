@@ -1,4 +1,11 @@
 import {
+  INPUT_DEBOUNCE,
+  MATCH_MINUTE_INTERVAL,
+  MAX_MATCH_LENGTH,
+  MAX_NUM_GOALS,
+  MIN_MATCH_LENGTH,
+} from "../constants";
+import {
   debounceTime,
   filter,
   finalize,
@@ -10,12 +17,18 @@ import {
   switchMap,
   take,
 } from "rxjs";
+import {
+  clearMatchTable,
+  drawMatch,
+  updateGoalLabel,
+  updateMinutesLabel,
+} from "../view/matchView";
 import { Match } from "../models/Match";
-import { getMatches, getMatchesByQuery } from "../controllers/data";
-import { clearMatchTable, drawMatch } from "../view/drawFunctions";
+import { getMatches, getMatchesByQuery } from "../controllers/fetchFunctions";
 import { checkIfAdded, checkPair, checkTicket } from "./ticketLogic";
+import { getRandomNum } from "../common";
 
-let obsArray: Observable<number>[] = [];
+const obsArray: Observable<number>[] = [];
 
 export const loadMatches = (): void => {
   getMatches().subscribe((matches) =>
@@ -26,11 +39,11 @@ export const loadMatches = (): void => {
   );
 };
 
-export const search = (): void => {
+export const handleSearch = (): void => {
   const searchInput: HTMLInputElement = document.querySelector(".search-input");
   fromEvent(searchInput, "input")
     .pipe(
-      debounceTime(200),
+      debounceTime(INPUT_DEBOUNCE),
       map((ev: InputEvent) => (<HTMLInputElement>ev.target).value),
       filter((query: string) => {
         if (query.length > 1) return true;
@@ -44,28 +57,15 @@ export const search = (): void => {
 };
 
 export const simulateMatch = (match: Match): void => {
-  const randomMinutes: number = Math.floor(Math.random() * 10 + 1) + 90;
+  const matchLength: number = getRandomNum(MIN_MATCH_LENGTH, MAX_MATCH_LENGTH);
 
-  let homeGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 4),
-    randomMinutes
-  );
-  let guestGoalsMin: number[] = getGoalMinutes(
-    Math.floor(Math.random() * 4),
-    randomMinutes
-  );
+  let homeGoalsMin: number[] = getGoalMinutes(matchLength);
+  let guestGoalsMin: number[] = getGoalMinutes(matchLength);
 
   let homeGoals: number = 0;
   let guestGoals: number = 0;
 
-  const goalsLabel: HTMLElement = document.getElementById(
-    `match${match.id}-goals`
-  );
-  const minutesLabel: HTMLElement = document.getElementById(
-    `match${match.id}-minutes`
-  );
-
-  match.length = randomMinutes;
+  match.length = matchLength;
 
   match.result =
     homeGoalsMin.length > guestGoalsMin.length
@@ -74,29 +74,27 @@ export const simulateMatch = (match: Match): void => {
       ? "2"
       : "X";
 
-  const observable = interval(100).pipe(
-    take(randomMinutes),
+  const observable = interval(MATCH_MINUTE_INTERVAL).pipe(
+    take(matchLength),
     finalize(() => checkPair(match))
   );
 
   obsArray.push(observable);
 
   observable.subscribe((minute: number) => {
-    minutesLabel.innerHTML = `${minute}'`;
+    updateMinutesLabel(match, minute);
 
-    if (minute === 0) {
-      goalsLabel.innerHTML = "0 : 0";
-    }
+    if (minute === 0) updateGoalLabel(match, homeGoals, guestGoals);
 
     if (minute === homeGoalsMin[0]) {
       homeGoals++;
-      goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
+      updateGoalLabel(match, homeGoals, guestGoals);
       homeGoalsMin.shift();
     }
 
     if (minute === guestGoalsMin[0]) {
       guestGoals++;
-      goalsLabel.innerHTML = `${homeGoals} : ${guestGoals}`;
+      updateGoalLabel(match, homeGoals, guestGoals);
       guestGoalsMin.shift();
     }
   });
@@ -108,17 +106,18 @@ export const waitSimulation = (): void => {
   forkJoin(obsArray).subscribe(() => {
     setTimeout(() => {
       checkTicket();
-    }, 500);
-    obsArray = [];
+    }, 300);
+    obsArray.length = 0;
   });
 };
 
-const getGoalMinutes = (numOfGoals: number, maxRange: number): number[] => {
+const getGoalMinutes = (maxRange: number): number[] => {
+  const goalsNum = getRandomNum(0, MAX_NUM_GOALS);
   let goalMinutes: number[] = [];
 
-  if (numOfGoals !== 0) {
-    for (let i = 0; i < numOfGoals; i++) {
-      goalMinutes.push(Math.floor(Math.random() * maxRange));
+  if (goalsNum !== 0) {
+    for (let i = 0; i < goalsNum; i++) {
+      goalMinutes.push(getRandomNum(0, maxRange));
     }
   }
   goalMinutes.sort((a, b) => a - b);
