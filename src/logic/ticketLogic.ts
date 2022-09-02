@@ -1,6 +1,6 @@
 import { TICKET, PLAYER, INPUT_DEBOUNCE } from "../constants";
 import { debounceTime, fromEvent, map } from "rxjs";
-import { Match } from "../models/Match";
+import { Match } from "../models/match";
 import { disableAllButtons, disableButtons } from "../view/matchView";
 import { simulateMatch, waitSimulation } from "./matchTableLogic";
 import {

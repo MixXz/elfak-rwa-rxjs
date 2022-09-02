@@ -1,6 +1,6 @@
 import { from, Observable } from "rxjs";
 import { SERVER_ADDRESS } from "../constants";
-import { Match } from "../models/Match";
+import { Match } from "../models/match";
 
 export const getMatches = (): Observable<Match[]> => {
   const promise: Promise<Match[]> = fetch(`${SERVER_ADDRESS}/matches`)

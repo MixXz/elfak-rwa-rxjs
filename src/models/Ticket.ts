@@ -1,4 +1,4 @@
-import { Match } from "./Match";
+import { Match } from "./match";
 
 export type Euro = number;
 

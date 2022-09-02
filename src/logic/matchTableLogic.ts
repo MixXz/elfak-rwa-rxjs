@@ -23,7 +23,7 @@ import {
   updateGoalLabel,
   updateMinutesLabel,
 } from "../view/matchView";
-import { Match } from "../models/Match";
+import { Match } from "../models/match";
 import { getMatches, getMatchesByQuery } from "../controllers/fetchFunctions";
 import { checkIfAdded, checkPair, checkTicket } from "./ticketLogic";
 import { getRandomNum } from "../common";

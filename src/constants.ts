@@ -1,5 +1,5 @@
-import { NumberTicket } from "./models/NumbersTicket";
-import { Euro, Ticket } from "./models/Ticket";
+import { NumberTicket } from "./models/numbersTicket";
+import { Euro, Ticket } from "./models/ticket";
 
 export const SERVER_ADDRESS = "http://localhost:3000";
 

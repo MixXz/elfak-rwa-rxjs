@@ -1,4 +1,4 @@
-import { Match } from "../models/Match";
+import { Match } from "../models/match";
 import { addMatch } from "../logic/ticketLogic";
 import { drawTicket } from "./ticketView";
 import { drawNumberTicket } from "./numberTicketView";
