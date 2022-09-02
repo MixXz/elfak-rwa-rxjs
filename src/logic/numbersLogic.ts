@@ -19,9 +19,12 @@ import {
 import { updateBalanceLabel } from "../view/ticketView";
 
 export const simulateNumbers = (): void => {
+  resetNumTicket();
   getInputs();
 
   PLAYER.balance -= NUMBERS_TICKET_PRICE;
+
+  updateBalanceLabel();
 
   const oddInterval = interval(NUMBERS_DRAW_INTERVAL).pipe(
     map(() => generateOddNumber()),
@@ -80,8 +83,7 @@ const checkSum = (odd: Observable<number>, even: Observable<number>): void => {
         setTimeout(() => {
           alert("YOU WON 10 000 € JACKPOT!");
           PLAYER.balance += NUMBERS_JACKPOT;
-          NUMBERS_TICKET.pairWin = false;
-          NUMBERS_TICKET.lessOrGreaterWin = false;
+          resetNumTicket();
           updateBalanceLabel();
         }, 100);
       }
@@ -110,6 +112,14 @@ const getInputs = (): void => {
   NUMBERS_TICKET.pairOdd = Number(num1.value);
   NUMBERS_TICKET.pairEven = Number(num2.value);
   NUMBERS_TICKET.less = less.checked;
+};
+
+const resetNumTicket = (): void => {
+  NUMBERS_TICKET.pairWin = false;
+  NUMBERS_TICKET.lessOrGreaterWin = false;
+  NUMBERS_TICKET.less = false;
+  NUMBERS_TICKET.pairOdd = 1;
+  NUMBERS_TICKET.pairEven = 2;
 };
 
 const generateOddNumber = (): number => {
